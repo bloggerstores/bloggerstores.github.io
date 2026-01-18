@@ -58,7 +58,7 @@ function license(){
         var copyrightEl = document.getElementById('copyright');
         if(copyrightEl !== null) {
             var year = new Date().getFullYear();
-            copyrightEl.innerHTML = '&#0169; ' + year + ' — Made with ❤️ <a href="https://qrohobbies.com" target="_blank"><b>QRO Hobbies</b></a>';
+            copyrightEl.innerHTML = '&#0169; ' + year + '<a href="https://qrohobbies.com" target="_blank"><b>QRO Hobbies</b></a>';
             copyrightEl.setAttribute('style', 'display:inline-block!important;opacity:1!important;');
         }
     }
