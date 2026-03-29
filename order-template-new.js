@@ -121,7 +121,7 @@ window['onload'] = function() {
         if (confirm('¿Estás seguro de que deseas confirmar el pago y enviar el comprobante por WhatsApp?')) {
             var _0x52e2b1 = $_config[_0x9e9094(0xcf)][_0x9e9094(0x12f)][_0x9e9094(0x12d)](_0x9e9094(0x123), $_config[_0x9e9094(0xe9)][_0x9e9094(0xae)] + _0x9e9094(0xe5) + $_config[_0x9e9094(0xe9)][_0x9e9094(0xe7)])[_0x9e9094(0x12d)](_0x9e9094(0xec), $('#invoice\x20form\x20[name=payment]:checked')[_0x9e9094(0xfe)]()) + _0x9e9094(0x12c) + $_config['url'][_0x9e9094(0x10e)];
             // Cambio de nombre de Blog
-            _0x52e2b1 = _0x52e2b1[_0x9e9094(0x12d)]('QRO Hobbies Orders', 'Pedido');
+            _0x52e2b1 = _0x52e2b1[_0x9e9094(0x12d)]('QRO Hobbies Orders', 'Orden');
             location[_0x9e9094(0xfc)] = 'https://api.whatsapp.com/send?phone=' + $_config[_0x9e9094(0xab)] + _0x9e9094(0xf1) + encodeURIComponent(_0x52e2b1)[_0x9e9094(0x12d)](_0x9e9094(0x131), '');
         }
     }),
