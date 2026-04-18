@@ -16,10 +16,6 @@
 
 ================================================================================================ */
 
-license();
-function license() {
-  console.log('License check disabled');
-}
 window.onload = function () {
   custom();
   pop();
