@@ -625,22 +625,29 @@ function etc() {
     _0xce5f1.wrapInner("<span class=\"dropdown-title\"></span>");
     _0xce5f1.append("<ul class=\"sub\"></ul>");
   });
-  // ── PARCHE: Tercer nivel de menú (sub-submenú) ──────────────────────
-  // Paso 1: procesar primero __ (doble guion bajo) → tercer nivel
+  // ── PARCHE: marcar ítems de tercer nivel ANTES de que el bloque _ los limpie
   $(".LinkList li a").filter(function() {
     return $(this).text().indexOf("__") === 0;
   }).each(function() {
-    var $li       = $(this).parent("li");
-    var $parentSub = $li.closest("ul.sub");
-    if (!$parentSub.length) return;
+    $(this).parent("li").attr("data-subsub", "true");
+  });
+  // ── FIN marcado ──
 
-    // Buscar el li anterior dentro del .sub que será el padre
-    var $targetLi = $li.prevAll("li").first();
-    if (!$targetLi.length) {
-      $targetLi = $parentSub.find("li:first");
-    }
+  $(".LinkList li a:contains(\"_\")").each(function () {
+    var _0x56d6ca = $(this).parent('li').prev(".dropdown").find('ul');
+    $(this).parent('li').appendTo(_0x56d6ca);
+    var _0x3ff809 = $(this).text().replaceAll('_', '').replaceAll("_ ", '');
+    $(this).text(_0x3ff809);
+  });
 
-    // Crear ul.sub-sub si no existe aún en ese li
+  // ── PARCHE: Tercer nivel de menú (sub-submenú) ──────────────────────
+  // Corre DESPUÉS del bloque _ — los ítems ya están en ul.sub y texto limpio
+  $(".LinkList ul.sub li[data-subsub]").each(function() {
+    var $li       = $(this);
+    var $targetLi = $li.prev("li");
+    if (!$targetLi.length) return;
+
+    // Crear ul.sub-sub si no existe aún en ese li padre
     if (!$targetLi.find("ul.sub-sub").length) {
       $targetLi.addClass("has-subsub");
       $targetLi.append('<ul class="sub-sub"></ul>');
@@ -649,12 +656,11 @@ function etc() {
       );
     }
 
-    // Mover el li al sub-sub y limpiar el prefijo __
     $li.appendTo($targetLi.find("ul.sub-sub"));
-    $(this).text($(this).text().replace(/^__\s*/, ""));
+    $li.removeAttr("data-subsub");
   });
 
-  // Paso 2: toggle del sub-sub al hacer click en su padre
+  // Toggle del sub-sub al hacer click en su li padre
   $(".LinkList").on("click", "li.has-subsub > a", function(e) {
     e.stopPropagation();
     $(this).siblings("ul.sub-sub").toggle();
@@ -662,12 +668,6 @@ function etc() {
   });
   // ── FIN PARCHE ───────────────────────────────────────────────────────
 
-  $(".LinkList li a:contains(\"_\")").each(function () {
-    var _0x56d6ca = $(this).parent('li').prev(".dropdown").find('ul');
-    $(this).parent('li').appendTo(_0x56d6ca);
-    var _0x3ff809 = $(this).text().replaceAll('_', '').replaceAll("_ ", '');
-    $(this).text(_0x3ff809);
-  });
   $(".LinkList").on("click", 'li.dropdown', function () {
     $(this).find("ul:first").toggle();
     $(this).toggleClass("active");
