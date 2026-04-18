@@ -625,13 +625,40 @@ function etc() {
     _0xce5f1.wrapInner("<span class=\"dropdown-title\"></span>");
     _0xce5f1.append("<ul class=\"sub\"></ul>");
   });
-  // ── PARCHE: marcar ítems de tercer nivel ANTES de que el bloque _ los limpie
+  // ── PARCHE: Tercer nivel de menú ─────────────────────────────────────
+  // Paso 1: procesar los __ COMPLETAMENTE antes de que el bloque _ los toque.
+  // En este punto los ítems con _ y __ están todos en el ul raíz del LinkList.
+  // Los __ deben moverse al ul.sub del dropdown que los contiene, saltándose
+  // los _ intermedios, para que el bloque _ original no los pierda.
   $(".LinkList li a").filter(function() {
     return $(this).text().indexOf("__") === 0;
   }).each(function() {
-    $(this).parent("li").attr("data-subsub", "true");
+    var $li = $(this).parent("li");
+
+    // Buscar hacia atrás el primer li con _ (que será su padre de nivel 2)
+    // y antes de ese, el li.dropdown que es el padre de nivel 1
+    var $prevSingle = $li.prevAll("li").filter(function() {
+      return $(this).find("a").first().text().indexOf("__") !== 0 &&
+             $(this).find("a").first().text().indexOf("_") === 0;
+    }).first();
+
+    var $dropdown = $prevSingle.length
+      ? $prevSingle.prevAll("li.dropdown").first()
+      : $li.prevAll("li.dropdown").first();
+
+    if (!$dropdown.length) return;
+
+    var $sub = $dropdown.find("ul.sub");
+    if (!$sub.length) return;
+
+    // Marcar y mover al ul.sub (junto con los _ normales)
+    $li.attr("data-subsub", "true");
+    $li.appendTo($sub);
+
+    // Limpiar el texto (quitar __)
+    $(this).text($(this).text().replace(/^__\s*/, ""));
   });
-  // ── FIN marcado ──
+  // ── FIN paso 1 ──
 
   $(".LinkList li a:contains(\"_\")").each(function () {
     var _0x56d6ca = $(this).parent('li').prev(".dropdown").find('ul');
@@ -640,14 +667,12 @@ function etc() {
     $(this).text(_0x3ff809);
   });
 
-  // ── PARCHE: Tercer nivel de menú (sub-submenú) ──────────────────────
-  // Corre DESPUÉS del bloque _ — los ítems ya están en ul.sub y texto limpio
+  // Paso 2: dentro del ul.sub, mover los [data-subsub] al sub-sub de su li anterior
   $(".LinkList ul.sub li[data-subsub]").each(function() {
     var $li       = $(this);
     var $targetLi = $li.prev("li");
     if (!$targetLi.length) return;
 
-    // Crear ul.sub-sub si no existe aún en ese li padre
     if (!$targetLi.find("ul.sub-sub").length) {
       $targetLi.addClass("has-subsub");
       $targetLi.append('<ul class="sub-sub"></ul>');
@@ -660,7 +685,7 @@ function etc() {
     $li.removeAttr("data-subsub");
   });
 
-  // Toggle del sub-sub al hacer click en su li padre
+  // Toggle al hacer click en el li padre del sub-sub
   $(".LinkList").on("click", "li.has-subsub > a", function(e) {
     e.stopPropagation();
     $(this).siblings("ul.sub-sub").toggle();
