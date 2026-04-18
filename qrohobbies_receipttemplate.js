@@ -18,10 +18,6 @@ Gracias
 
 ================================================================================================ */
 
-license();
-function license() {
-  console.log('License check disabled');
-}
 window.onload = function () {
   const _0x10d45e = new Date();
   const _0x2aa5c6 = _0x10d45e.getTime();
