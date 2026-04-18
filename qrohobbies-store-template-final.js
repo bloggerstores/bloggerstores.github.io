@@ -626,37 +626,35 @@ function etc() {
     _0xce5f1.append("<ul class=\"sub\"></ul>");
   });
   // ── PARCHE: Tercer nivel de menú ─────────────────────────────────────
-  // Paso 1: procesar los __ COMPLETAMENTE antes de que el bloque _ los toque.
-  // En este punto los ítems con _ y __ están todos en el ul raíz del LinkList.
-  // Los __ deben moverse al ul.sub del dropdown que los contiene, saltándose
-  // los _ intermedios, para que el bloque _ original no los pierda.
+  // Paso 1: mover los __ al ul.sub del dropdown más cercano anterior,
+  // insertándolos después del _ que les precede en la lista original.
   $(".LinkList li a").filter(function() {
     return $(this).text().indexOf("__") === 0;
   }).each(function() {
     var $li = $(this).parent("li");
-
-    // Buscar hacia atrás el primer li con _ (que será su padre de nivel 2)
-    // y antes de ese, el li.dropdown que es el padre de nivel 1
-    var $prevSingle = $li.prevAll("li").filter(function() {
-      return $(this).find("a").first().text().indexOf("__") !== 0 &&
-             $(this).find("a").first().text().indexOf("_") === 0;
-    }).first();
-
-    var $dropdown = $prevSingle.length
-      ? $prevSingle.prevAll("li.dropdown").first()
-      : $li.prevAll("li.dropdown").first();
-
+    var $dropdown = $li.prevAll("li.dropdown").first();
     if (!$dropdown.length) return;
-
     var $sub = $dropdown.find("ul.sub");
     if (!$sub.length) return;
 
-    // Marcar y mover al ul.sub (junto con los _ normales)
-    $li.attr("data-subsub", "true");
-    $li.appendTo($sub);
+    // Encontrar el _ inmediatamente anterior (su padre de nivel 2)
+    var $prevUnder = $li.prevAll("li").filter(function() {
+      var t = $(this).find("a").first().text();
+      return t.indexOf("_") === 0;
+    }).first();
 
-    // Limpiar el texto (quitar __)
+    $li.attr("data-subsub", "true");
     $(this).text($(this).text().replace(/^__\s*/, ""));
+
+    if ($prevUnder.length) {
+      // Insertar justo después del _ padre dentro del ul.sub
+      // (el _ padre todavía está en el ul raíz, así que usamos su índice)
+      // Guardamos referencia al _ para posicionarnos después del paso _
+      $li.attr("data-after-text", $prevUnder.find("a").first().text().replace(/^_+\s*/, ""));
+      $li.appendTo($sub);
+    } else {
+      $li.appendTo($sub);
+    }
   });
   // ── FIN paso 1 ──
 
@@ -667,10 +665,21 @@ function etc() {
     $(this).text(_0x3ff809);
   });
 
-  // Paso 2: dentro del ul.sub, mover los [data-subsub] al sub-sub de su li anterior
+  // Paso 2: dentro del ul.sub, mover los [data-subsub] al sub-sub de su li padre
   $(".LinkList ul.sub li[data-subsub]").each(function() {
-    var $li       = $(this);
-    var $targetLi = $li.prev("li");
+    var $li        = $(this);
+    var afterText  = $li.attr("data-after-text");
+    var $targetLi  = null;
+
+    if (afterText) {
+      // Buscar el li cuyo texto de enlace coincide con el _ padre
+      $targetLi = $li.siblings("li").filter(function() {
+        return $(this).find("a").first().text().trim() === afterText.trim();
+      }).first();
+    }
+    if (!$targetLi || !$targetLi.length) {
+      $targetLi = $li.prev("li");
+    }
     if (!$targetLi.length) return;
 
     if (!$targetLi.find("ul.sub-sub").length) {
@@ -682,7 +691,7 @@ function etc() {
     }
 
     $li.appendTo($targetLi.find("ul.sub-sub"));
-    $li.removeAttr("data-subsub");
+    $li.removeAttr("data-subsub").removeAttr("data-after-text");
   });
 
   // Toggle al hacer click en el li padre del sub-sub
