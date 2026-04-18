@@ -16,10 +16,6 @@
 
 ================================================================================================ */
 
-license();
-function license() {
-  console.log('License check disabled');
-}
 window.onload = function () {
   $("img#logo").attr("src", $_config.page.logo);
   var _0x3ece9f = $(".post-body table .client_name").text().replace(/  |\r\n|\n|\r/gm, '');
