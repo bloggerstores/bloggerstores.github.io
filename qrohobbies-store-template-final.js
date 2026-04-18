@@ -625,38 +625,36 @@ function etc() {
     _0xce5f1.wrapInner("<span class=\"dropdown-title\"></span>");
     _0xce5f1.append("<ul class=\"sub\"></ul>");
   });
+
   // ── PARCHE: Tercer nivel de menú ─────────────────────────────────────
-  // Paso 1: mover los __ al ul.sub del dropdown más cercano anterior,
-  // insertándolos después del _ que les precede en la lista original.
+  // Paso 0: ANTES del bloque dropdown, neutralizar el href de los __
+  // para que no sean convertidos en .dropdown por el bloque de arriba.
   $(".LinkList li a").filter(function() {
     return $(this).text().indexOf("__") === 0;
   }).each(function() {
+    $(this).attr("data-was-subsub", "true");
+    $(this).attr("href", "javascript:void(0)");
+  });
+
+  // Paso 1: mover los [data-was-subsub] al ul.sub del dropdown anterior
+  // y guardar referencia al _ inmediatamente anterior (su padre de nivel 2)
+  $(".LinkList li a[data-was-subsub]").each(function() {
     var $li = $(this).parent("li");
     var $dropdown = $li.prevAll("li.dropdown").first();
     if (!$dropdown.length) return;
     var $sub = $dropdown.find("ul.sub");
     if (!$sub.length) return;
 
-    // Encontrar el _ inmediatamente anterior (su padre de nivel 2)
-    var $prevUnder = $li.prevAll("li").filter(function() {
-      var t = $(this).find("a").first().text();
-      return t.indexOf("_") === 0;
-    }).first();
+    var $prevSib = $li.prev("li");
+    var afterText = $prevSib.length ? $prevSib.find("a").first().text().replace(/^_+\s*/, "") : "";
 
     $li.attr("data-subsub", "true");
+    $li.attr("data-after-text", afterText);
     $(this).text($(this).text().replace(/^__\s*/, ""));
-
-    if ($prevUnder.length) {
-      // Insertar justo después del _ padre dentro del ul.sub
-      // (el _ padre todavía está en el ul raíz, así que usamos su índice)
-      // Guardamos referencia al _ para posicionarnos después del paso _
-      $li.attr("data-after-text", $prevUnder.find("a").first().text().replace(/^_+\s*/, ""));
-      $li.appendTo($sub);
-    } else {
-      $li.appendTo($sub);
-    }
+    $(this).removeAttr("data-was-subsub");
+    $li.appendTo($sub);
   });
-  // ── FIN paso 1 ──
+  // ── FIN pasos 0-1 ──
 
   $(".LinkList li a:contains(\"_\")").each(function () {
     var _0x56d6ca = $(this).parent('li').prev(".dropdown").find('ul');
@@ -665,14 +663,13 @@ function etc() {
     $(this).text(_0x3ff809);
   });
 
-  // Paso 2: dentro del ul.sub, mover los [data-subsub] al sub-sub de su li padre
+  // Paso 2: dentro del ul.sub, anidar los [data-subsub] bajo su li padre
   $(".LinkList ul.sub li[data-subsub]").each(function() {
-    var $li        = $(this);
-    var afterText  = $li.attr("data-after-text");
-    var $targetLi  = null;
+    var $li       = $(this);
+    var afterText = $li.attr("data-after-text");
+    var $targetLi = null;
 
     if (afterText) {
-      // Buscar el li cuyo texto de enlace coincide con el _ padre
       $targetLi = $li.siblings("li").filter(function() {
         return $(this).find("a").first().text().trim() === afterText.trim();
       }).first();
@@ -701,7 +698,6 @@ function etc() {
     $(this).closest("li.has-subsub").toggleClass("subsub-active");
   });
   // ── FIN PARCHE ───────────────────────────────────────────────────────
-
   $(".LinkList").on("click", 'li.dropdown', function () {
     $(this).find("ul:first").toggle();
     $(this).toggleClass("active");
