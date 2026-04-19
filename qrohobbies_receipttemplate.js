@@ -156,7 +156,7 @@ function separator(_0x19ef43, _0x39ddb7 = '') {
   }
   return _0x39ddb7 ? _0x39ddb7 + " " + _0x341eeb.split('', _0x341eeb.length - 0x1).reverse().join('') : _0x341eeb.split('', _0x341eeb.length - 0x1).reverse().join('');
 }
-// Formatear campos [name=price], [name=discount], [name=downpayment] al salir del input
+
 $(document).on('blur', '[name=price], [name=discount], [name=downpayment]', function () {
   let raw = $(this).val().replace(/[^0-9]/g, '');
   if (!raw) {
@@ -172,7 +172,6 @@ $(document).on('focus', '[name=price], [name=discount], [name=downpayment]', fun
   $(this).val(cleaned);
 });
 
-// Calcular importes y totales al cambiar precio, cantidad, descuento o anticipo
 $(document).on('input change', '[name=price], [name=qty], [name=discount], [name=downpayment]', function () {
   let subtotal = 0;
   $('table tbody tr').each(function () {
