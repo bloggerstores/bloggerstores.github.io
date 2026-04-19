@@ -617,7 +617,7 @@ function etc() {
     var _0x1a0b68 = 'https://api.whatsapp.com/send?phone=' + $_config.whatsapp + "&text=" + encodeURIComponent(_0x11c41b);
     popwin(_0x1a0b68);
   });
-  $(".LinkList li a[href*=\"#\"]").each(function () {
+  $(".LinkList li a[href*=\"#\"]:not([href^=\"#sub\"]):not([href^=\"#sub-parent\"])").each(function () {
     $(this).attr("href", "javascript:void(0)");
     $(this).append("<i class=\"icon right\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z\"/></svg></i>");
     var _0xce5f1 = $(this).parent('li');
@@ -625,79 +625,12 @@ function etc() {
     _0xce5f1.wrapInner("<span class=\"dropdown-title\"></span>");
     _0xce5f1.append("<ul class=\"sub\"></ul>");
   });
-
-  // ── PARCHE: Tercer nivel de menú ─────────────────────────────────────
-  // Paso 0: ANTES del bloque dropdown, neutralizar el href de los __
-  // para que no sean convertidos en .dropdown por el bloque de arriba.
-  $(".LinkList li a").filter(function() {
-    return $(this).text().indexOf("__") === 0;
-  }).each(function() {
-    $(this).attr("data-was-subsub", "true");
-    $(this).attr("href", "javascript:void(0)");
-  });
-
-  // Paso 1: mover los [data-was-subsub] al ul.sub del dropdown anterior
-  // y guardar referencia al _ inmediatamente anterior (su padre de nivel 2)
-  $(".LinkList li a[data-was-subsub]").each(function() {
-    var $li = $(this).parent("li");
-    var $dropdown = $li.prevAll("li.dropdown").first();
-    if (!$dropdown.length) return;
-    var $sub = $dropdown.find("ul.sub");
-    if (!$sub.length) return;
-
-    var $prevSib = $li.prev("li");
-    var afterText = $prevSib.length ? $prevSib.find("a").first().text().replace(/^_+\s*/, "") : "";
-
-    $li.attr("data-subsub", "true");
-    $li.attr("data-after-text", afterText);
-    $(this).text($(this).text().replace(/^__\s*/, ""));
-    $(this).removeAttr("data-was-subsub");
-    $li.appendTo($sub);
-  });
-  // ── FIN pasos 0-1 ──
-
-  $(".LinkList li a:contains(\"_\")").each(function () {
+  $(".LinkList li a:contains(\"_\"):not([href^=\"#sub-parent\"])").each(function () {
     var _0x56d6ca = $(this).parent('li').prev(".dropdown").find('ul');
     $(this).parent('li').appendTo(_0x56d6ca);
     var _0x3ff809 = $(this).text().replaceAll('_', '').replaceAll("_ ", '');
     $(this).text(_0x3ff809);
   });
-
-  // Paso 2: dentro del ul.sub, anidar los [data-subsub] bajo su li padre
-  $(".LinkList ul.sub li[data-subsub]").each(function() {
-    var $li       = $(this);
-    var afterText = $li.attr("data-after-text");
-    var $targetLi = null;
-
-    if (afterText) {
-      $targetLi = $li.siblings("li").filter(function() {
-        return $(this).find("a").first().text().trim() === afterText.trim();
-      }).first();
-    }
-    if (!$targetLi || !$targetLi.length) {
-      $targetLi = $li.prev("li");
-    }
-    if (!$targetLi.length) return;
-
-    if (!$targetLi.find("ul.sub-sub").length) {
-      $targetLi.addClass("has-subsub");
-      $targetLi.append('<ul class="sub-sub"></ul>');
-      $targetLi.find("a:first").append(
-        '<i class="icon right subsub-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"/></svg></i>'
-      );
-    }
-
-    $li.appendTo($targetLi.find("ul.sub-sub"));
-    $li.removeAttr("data-subsub").removeAttr("data-after-text");
-  });
-
-  // Toggle al hacer click en el li padre del sub-sub
-  $(".LinkList").on("click", "li.has-subsub > a", function(e) {
-    e.stopPropagation();
-    $(this).siblings("ul.sub-sub").toggle();
-    $(this).closest("li.has-subsub").toggleClass("subsub-active");
-  });
-  // ── FIN PARCHE ───────────────────────────────────────────────────────
   $(".LinkList").on("click", 'li.dropdown', function () {
     $(this).find("ul:first").toggle();
     $(this).toggleClass("active");
