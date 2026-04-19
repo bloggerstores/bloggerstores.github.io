@@ -325,7 +325,6 @@ function slideshow() {
 function product_sort() {
   $("#sort select").on("change", function () {
     $("#sort").addClass("loading");
-    // CORREGIDO: valores de ordenamiento traducidos del indonesio al español
     if ($(this).val() == 'recientes') {
       var _0x180efc = $(".Blog article");
       _0x180efc.sort(function (_0x35d830, _0x53b453) {
@@ -779,8 +778,6 @@ function timeago() {
     _0x1ec8a3.text(_0x3c9fe2(_0x3adefb));
   });
   function _0x3c9fe2(_0x2b3966) {
-    // CORREGIDO: unidades de tiempo traducidas del indonesio al español
-    // y reordenado "hace" al inicio para que quede natural en español
     var _0x5a56ec = "ago";
     var _0x737518 = "seconds";
     var _0x4bda47 = "minutes";
@@ -788,11 +785,11 @@ function timeago() {
     var _0x17778f = "days";
     var _0x4a9abe = "months";
     var _0x21bf7e = "years";
-    var _0x4c3949 = ""; // prefijo vacío por defecto (para inglés el sufijo ya está en _0x5a56ec)
+    var _0x4c3949 = "";
 
     if ($_config.money.country_id == "es-MX") {
-      _0x5a56ec = "";       // en español no se usa sufijo, "hace" va al inicio
-      _0x4c3949 = "hace";   // prefijo en español
+      _0x5a56ec = "";
+      _0x4c3949 = "hace";
       _0x737518 = "segundos";
       _0x4bda47 = "minutos";
       _0x1aa6b1 = "horas";
@@ -804,7 +801,7 @@ function timeago() {
     var _0x62e752 = new Date(_0x2b3966);
     var _0x528548 = new Date() - _0x62e752;
 
-    // Si es español: "hace X unidad" | Si es inglés: "X unidad ago"
+
     function fmt(n, unit) {
       if ($_config.money.country_id == "es-MX") {
         return _0x4c3949 + " " + n + " " + unit;
