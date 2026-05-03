@@ -30,6 +30,10 @@ window.onload = function () {
   timeago();
   translate();
   custom_js();
+  // ── MODO CATÁLOGO GLOBAL: ocultar carrito completo ──
+  if (typeof $_catalog_mode !== 'undefined' && $_catalog_mode === true) {
+    $('#cart-btn, #cart, .cart-btn-head').hide();
+  }
 };
 function cart() {
   var _0x168f81 = "        <fieldset>            <input type=\"text\" name=\"name\" placeholder=\"" + $_config.text.checkout_name + "\" required>            <input type=\"tel\" name=\"phone\" placeholder=\"" + $_config.text.checkout_phone + "\" required>        </fieldset>    ";
