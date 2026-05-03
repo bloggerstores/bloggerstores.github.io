@@ -400,6 +400,10 @@ function product_convert() {
       $("figure.cover a:first", _0x1aea8b).append("<span class=\"empty\"><b>" + $_config.text.product_empty + "</b></span>");
       $("[itemprop=\"availability\"]", _0x1aea8b).attr("content", "https://schema.org/OutOfStock");
     }
+    // ── MODO CATÁLOGO GLOBAL: sobreescribe el campo catalog de la entrada si está activo ──
+    if (typeof $_catalog_mode !== 'undefined' && $_catalog_mode === true) {
+      _0x3cd353.catalog = 'on';
+    }
     // ── MODO CATÁLOGO: si catalog == 'on', omitir precio, opciones y botones de compra ──
     var _0x142f07 = '';
     if (_0x3cd353.catalog != 'on') {
