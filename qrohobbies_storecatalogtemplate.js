@@ -435,21 +435,22 @@ function product_convert() {
       _0x142f07 += "                </div>            ";
     }
     // ── FIN MODO CATÁLOGO ──
+    var _0x4579f6 = $(".title", this);
+    if (_0x142f07) $(_0x142f07).insertAfter(_0x4579f6);
     // ── MARKETPLACE: se evalúa siempre, independientemente del modo catálogo ──
     if (_0x1aea8b.hasClass("is_post")) {
       var _0x497ca8 = $(".marketplace", _0x1aea8b);
       if ($(".status", _0x497ca8).text() == 'on') {
-        _0x142f07 += "                        <div class=\"marketplace\">                            <small>" + $_config.text.product_via_marketplace + "</small>                            <br>                    ";
+        var _0xmkthtml = "                        <div class=\"marketplace\">                            <small>" + $_config.text.product_via_marketplace + "</small>                            <br>                    ";
         $(".link", _0x497ca8).each(function () {
           if ($(this).text()) {
-            _0x142f07 += "                                <a href=\"" + $(this).text() + "\" target=\"_blank\" title=\"" + $(this).text().split('/')[0x2].toLowerCase().replace("www.", '') + "\" rel=\"nofollow\">                                    <img src=\"https://www.google.com/s2/favicons?domain=" + $(this).text().split('/')[0x2] + "&sz=24\" alt=\"favicon\"/>                                </a>                            ";
+            _0xmkthtml += "                                <a href=\"" + $(this).text() + "\" target=\"_blank\" title=\"" + $(this).text().split('/')[0x2].toLowerCase().replace("www.", '') + "\" rel=\"nofollow\">                                    <img src=\"https://www.google.com/s2/favicons?domain=" + $(this).text().split('/')[0x2] + "&sz=24\" alt=\"favicon\"/>                                </a>                            ";
           }
         });
-        _0x142f07 += "                        </div>                    ";
+        _0xmkthtml += "                        </div>                    ";
+        $(_0xmkthtml).insertAfter(_0x4579f6);
       }
     }
-    var _0x4579f6 = $(".title", this);
-    $(_0x142f07).insertAfter(_0x4579f6);
     var _0x1aea8b = $(this);
     var _0x1eb356 = $('.price', _0x1aea8b).attr("data-unit");
     var _0x448650 = Number($(".price", _0x1aea8b).attr('data-price'));
