@@ -411,8 +411,6 @@ function product_convert() {
     // ── MODO CATÁLOGO: si catalog == 'on' y hay etiqueta, mostrar badge sobre la imagen ──
     if (_0x3cd353.mark) {
       $("figure.cover a:first", _0x1aea8b).append("<span class=\"mark-badge\"><b>" + _0x3cd353.mark + "</b></span>");
-    } else if (_0x3cd353.discount && Number(_0x3cd353.discount) > 0 && _0x1aea8b.hasClass("is_post")) {
-      $("figure.cover a:first", _0x1aea8b).append("<span class=\"mark-badge\"><b>-" + Number(_0x3cd353.discount) + "%</b></span>");
     }
     // ── MODO CATÁLOGO: si catalog == 'on', omitir precio, opciones y botones de compra ──
     var _0x142f07 = '';
@@ -463,6 +461,9 @@ function product_convert() {
         $(".price", _0x1aea8b).html("<s>" + separator(_0x448650) + "</s><b data-price=\"" + _0x24aa4e + "\">$" + separator(_0x24aa4e) + "</b>" + (_0x1eb356 ? "<span>c/" + _0x1eb356 + "</span>" : ''));
       } else {
         $(".price", _0x1aea8b).html("<small>-" + _0x5b9cf1 + '%</small><s>' + '$' + separator(_0x448650) + "</s><b data-price=\"" + _0x24aa4e + "\">$" + separator(_0x24aa4e) + "</b>" + (_0x1eb356 ? "<span>c/" + _0x1eb356 + "</span>" : ''));
+        if (_0x1aea8b.hasClass("is_post")) {
+          $("figure.cover a:first", _0x1aea8b).append("<span class=\"mark-badge\"><b>-" + _0x5b9cf1 + "%</b></span>");
+        }
       }
       $("[itemprop=\"price\"]", this).attr("content", _0x24aa4e);
     } else {
