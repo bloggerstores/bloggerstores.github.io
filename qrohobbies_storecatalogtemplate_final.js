@@ -410,7 +410,8 @@ function product_convert() {
     }
     // ── MODO CATÁLOGO: si catalog == 'on' y hay etiqueta, mostrar badge sobre la imagen ──
     if (_0x3cd353.mark) {
-      $("figure.cover a:first", _0x1aea8b).append("<span class=\"mark-badge\"><b>" + _0x3cd353.mark + "</b></span>");
+      var _0xMarkStyle = _0x3cd353['mark-color'] ? ' style="background:' + _0x3cd353['mark-color'] + '"' : '';
+      $("figure.cover a:first", _0x1aea8b).append("<span class=\"mark-badge\"" + _0xMarkStyle + "><b>" + _0x3cd353.mark + "</b></span>");
     }
     // ── MODO CATÁLOGO: si catalog == 'on', omitir precio, opciones y botones de compra ──
     var _0x142f07 = '';
