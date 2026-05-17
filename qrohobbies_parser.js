@@ -5,7 +5,7 @@
 ================================================================================================ */
 
 // ── URL de la página genérica de orden (ajusta si cambia) ──
-var ORDEN_URL = 'https://qrohobbiesinvoice.blogspot.com/p/pedido.html';
+var ORDEN_URL = 'https://qrohobbiesinvoice.blogspot.com/p/orden.html';
 
 window.onload = function () {
 
@@ -83,15 +83,15 @@ function parsearPedido(texto) {
     }
 
     // Email
-    var mEmail = texto.match(/Correo electrónico\s*:\s*([^\s\n\r*]+)/);
+    var mEmail = texto.match(/Correo electrónico\*\s*:\s*(.+?)\s*\*Notas/);
     if (mEmail) datos.email = mEmail[1].trim();
 
     // Dirección / método de entrega
-    var mEntrega = texto.match(/Métodos de entrega\s*:\s*([^\n\r*]+)/);
+    var mEntrega = texto.match(/Métodos de entrega\*\s*:\s*(.+?)\s*\*Métodos de pago/);
     if (mEntrega) datos.entrega = mEntrega[1].trim();
 
     // Notas
-    var mNota = texto.match(/Notas del pedido\s*:\s*([^\n\r]+)/);
+    var mNota = texto.match(/Notas del pedido\*\s*:\s*(.+?)\s*\*Métodos de entrega/);
     if (mNota && mNota[1].trim() !== '-') datos.nota = mNota[1].trim().replace(/\*/g, '');
 
     // Artículos: cada bloque "*Producto* Pago : *Variante* Cantidad y precio : *N* x $P = *$T*"
