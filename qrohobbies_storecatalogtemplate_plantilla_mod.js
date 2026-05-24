@@ -58,8 +58,13 @@ function cart() {
     _0x168f81 += "                </optgroup>            </select>        ";
   }
   if ($_config.checkout_form.payment) {
-    // ── Footer: bloque visual de métodos de pago ──
-    $("#contact").append("<p class=\"shippay shippay-payment\"><b>" + $_config.text.checkout_payment + "</b></p>");
+    // ── Footer: contenedor wrapper (grid-column 1/4) con dos columnas internas ──
+    var _shippayHtml = "<div class=\"shippay-wrap\"><p class=\"shippay shippay-payment\"><b>" + $_config.text.checkout_payment + "</b></p>";
+    if (typeof $_config.footer_shipping !== 'undefined') {
+      _shippayHtml += "<p class=\"shippay shippay-shipping\"><b>" + $_config.text.checkout_shipping + "</b></p>";
+    }
+    _shippayHtml += "</div>";
+    $("#contact").append(_shippayHtml);
     // ── Carrito: select de métodos de pago ──
     _0x168f81 += "            <select name=\"payment\" required>                <option value=\"\" selected hidden>" + $_config.text.checkout_payment + "</option>                <optgroup label=\"" + $_config.text.checkout_payment + " :\">        ";
     for (var _0x3647ed in $_config.checkout_form_payment) {
@@ -71,13 +76,13 @@ function cart() {
       }
     }
     _0x168f81 += "                </optgroup>            </select>        ";
-  }
-  if (typeof $_config.footer_shipping !== 'undefined') {
-    $("#contact").append("<p class=\"shippay shippay-shipping\"><b>" + $_config.text.checkout_shipping + "</b></p>");
-    for (var _fsk in $_config.footer_shipping) {
-      var _fsv = $_config.footer_shipping[_fsk];
-      if (_fsv.status == true) {
-        $("#contact .shippay-shipping").append("<figure><img alt=\"" + _fsk + "\" src=\"" + _fsv.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _fsk + "</figcaption></figure>");
+    // ── Footer: figuras de métodos de entrega (widget HTML46) ──
+    if (typeof $_config.footer_shipping !== 'undefined') {
+      for (var _fsk in $_config.footer_shipping) {
+        var _fsv = $_config.footer_shipping[_fsk];
+        if (_fsv.status == true) {
+          $("#contact .shippay-shipping").append("<figure><img alt=\"" + _fsk + "\" src=\"" + _fsv.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _fsk + "</figcaption></figure>");
+        }
       }
     }
   }
