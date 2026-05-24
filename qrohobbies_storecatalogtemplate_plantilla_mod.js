@@ -57,28 +57,29 @@ function cart() {
     }
     _0x168f81 += "                </optgroup>            </select>        ";
   }
-  // ── Métodos de envío en el footer (#contact) ──
-  if ($_config.checkout_form.shipping) {
-    $("#contact").append("<p class=\"shippay shippay-shipping\"><b>" + $_config.text.checkout_shipping + "</b></p>");
-    for (var _envKey in $_config.checkout_form_shipping) {
-      var _envItem = $_config.checkout_form_shipping[_envKey];
-      if (_envItem.status == true) {
-        $("#contact .shippay-shipping").append("<figure><img alt=\"" + _envKey + "\" src=\"" + _envItem.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _envKey + "</figcaption></figure>");
-      }
-    }
-  }
   if ($_config.checkout_form.payment) {
-    $("#contact").append("<p class=\"shippay\"><b>" + $_config.text.checkout_payment + "</b></p>");
+    // ── Footer: bloque visual de métodos de pago ──
+    $("#contact").append("<p class=\"shippay shippay-payment\"><b>" + $_config.text.checkout_payment + "</b></p>");
+    // ── Carrito: select de métodos de pago ──
     _0x168f81 += "            <select name=\"payment\" required>                <option value=\"\" selected hidden>" + $_config.text.checkout_payment + "</option>                <optgroup label=\"" + $_config.text.checkout_payment + " :\">        ";
     for (var _0x3647ed in $_config.checkout_form_payment) {
       var _0xb18196 = $_config.checkout_form_payment[_0x3647ed];
       if (_0xb18196.status == true) {
-        $("#contact .shippay").append("<figure><img alt=\"" + _0x3647ed + "\" src=\"" + _0xb18196.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _0x3647ed + "</figcaption></figure>");
+        $("#contact .shippay-payment").append("<figure><img alt=\"" + _0x3647ed + "\" src=\"" + _0xb18196.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _0x3647ed + "</figcaption></figure>");
         $("<img src=\"" + _0xb18196.img + "\"/>").on('load', function () {});
         _0x168f81 += "                    <option value=\"" + _0x3647ed + "\" data-info=\"" + _0xb18196.info + "\" data-img=\"" + _0xb18196.img + "\">                        " + _0x3647ed + "                    </option>                ";
       }
     }
     _0x168f81 += "                </optgroup>            </select>        ";
+  }
+  if (typeof $_config.footer_shipping !== 'undefined') {
+    $("#contact").append("<p class=\"shippay shippay-shipping\"><b>" + $_config.text.checkout_shipping + "</b></p>");
+    for (var _fsk in $_config.footer_shipping) {
+      var _fsv = $_config.footer_shipping[_fsk];
+      if (_fsv.status == true) {
+        $("#contact .shippay-shipping").append("<figure><img alt=\"" + _fsk + "\" src=\"" + _fsv.img + "\" width=\"24\" height=\"24\"/><figcaption>" + _fsk + "</figcaption></figure>");
+      }
+    }
   }
   $("#cart .form").append(_0x168f81);
   $("#cart .form").on('change', "select", function () {
